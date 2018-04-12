@@ -1,11 +1,8 @@
 package edu.handong.csee.java.lab09;
 
-// Insert HashMap, Scanner, Salesman class
+// Insert HashMap, Scanner
 import java.util.HashMap;
 import java.util.Scanner;
-import java.util.Set;
-
-import edu.handong.csee.java.lab09.Salesman;
 
 /**
  * class MarketingAnalyzer
