@@ -1,8 +1,10 @@
 package edu.handong.csee.java.lab09;
 
-// Insert Scanner
+// Insert HashMap, Scanner, Salesman class
+import java.util.HashMap;
 import java.util.Scanner;
-// Insert Salesman class
+import java.util.Set;
+
 import edu.handong.csee.java.lab09.Salesman;
 
 /**
@@ -15,7 +17,7 @@ import edu.handong.csee.java.lab09.Salesman;
 public class MarketingAnalyzer {
 	
 	// define class private variable
-	private Salesman[] team; // Array containing salesman information
+	HashMap<String, Double> team = new HashMap<String, Double>(); // HashMap for salesman information
 	private double highestSales; // The highest sales
 	private double averageSales; // The average amount sold
 	
@@ -49,38 +51,41 @@ public class MarketingAnalyzer {
 	 */
 	// method get the salesman information
 	public void getData()
-	{
-		// get number of salesman from user
-		System.out.print("Enter the number of salesman: ");
-		// Create an object of the Scanner
+	{		
+		team = new HashMap<>();
+
 		Scanner keyboard = new Scanner(System.in);
-		// save the entered number as numOFSalesman
-		int numOFSalesman = keyboard.nextInt();
 		
-		// define an array Salesman having numOFSales index units.
-		team = new Salesman[numOFSalesman];
-
-		// Get each salesman's information until the numOFSalesman is finished.
-		for(int i=0; i < numOFSalesman; i++) {
-
+		boolean done = false;
+		int i = 0;
+		
+		while(!done) {
+			
 			// Get the (i+1)th salseman's information (name and sales)
-			System.out.println("\nEnter data for associate number " + (i+1));
+			System.out.println("Enter data for associate number " + (i+1));
 			
 			System.out.print("Enter name of sales associate: ");
 			// Receive all entered strings by name
 			String name = keyboard.nextLine();
-			name = keyboard.nextLine();
-
+			
 			System.out.print("Enter associate's sales: $");
 			// Receive entered number by sales
 			double sales = keyboard.nextDouble();
+			keyboard.nextLine();
 			
-			// Place the salesman in the i-th array.
-			team[i] = new Salesman();
-			// put salesman's name in mName of i-th array
-			team[i].setmName(name);
-			// put salesman's sales in mSales of i-th array
-			team[i].setmSales(sales);			
+			// Check the user want to enter other salesman
+			System.out.print("\nDo you want to enter other salesman? ");
+			// get the user's answer
+			String ans = keyboard.nextLine();
+			
+			// if the answer is not yes
+			if(!ans.equalsIgnoreCase ("yes"))
+				done = true; // change done from false to true
+			
+			System.out.println();
+			// enter the name and sales to hashmap team
+			team.put(name, sales);
+			i++;
 		}
 	}
 
@@ -95,15 +100,14 @@ public class MarketingAnalyzer {
 		// initialize the sum by 0
 		double sum = 0;
 		
-		// Until finish the array, add the sales to sum
-		for(int i=0; i < team.length; i++) {
-			// add the sales of team[i] to sum
-			sum = sum + team[i].getmSales();
+		// Until finish the hash map, add the sales to sum
+		for(String sales : team.keySet()) {
+			sum = sum + team.get(sales);
 		}
 		
-		// divide the sum to team.length and put this value into averageSales
-		this.averageSales = sum/team.length;
-	}	
+		// divide the sum to team size and put this value into averageSales
+		this.averageSales = sum/team.size();
+	}
 	
 	/**
 	 * method computeHighestSales
@@ -116,12 +120,12 @@ public class MarketingAnalyzer {
 		// initialize the highestSales by 0;
 		double highestSales = 0;
 		
-		// Until finish the array, compare highestSales with team[i].getmSales
-		for(int i=0; i<team.length; i++) {
-			// If team[i].getmSales is greater than highestSales
-			if(highestSales < team[i].getmSales())
-				// set the highestSales to team[i].getmSales
-				highestSales = team[i].getmSales();
+		// Until finish the hash map, compare highestSales with team value
+		for(String curruentValue : team.keySet()) {
+			// If team value is greater than highestSales
+			if(highestSales < team.get(curruentValue))
+				// set the highestSales to team value
+				highestSales = team.get(curruentValue);
 		}
 		
 		// Set the highestSales to class value
@@ -141,44 +145,44 @@ public class MarketingAnalyzer {
 		System.out.println("The highest sales figure is $" + this.highestSales);
 		System.out.println("\n\nThe following had the highest sales: ");
 		
-		// Until finish the array, compare getmSales with highestSales
-		for(int i=0; i<team.length; i++) {
-			// If team[i].getSales is same highestSales
-			if(team[i].getmSales() == highestSales) {
-				// print out the team[i]'s name and sales
-				System.out.println("* Name: " + team[i].getmName());
-				System.out.println("* Sales: $" + team[i].getmSales());
-				// If team[i].getSales is same averageSales
-				if(team[i].getmSales() == averageSales)
+		// Until finish the hash map, compare getmSales with highestSales
+		for(String key : team.keySet()) {
+			// If team value is same highestSales
+			if(team.get(key) == highestSales) {
+				// print out the team's key and value
+				System.out.println("* Name: " + key);
+				System.out.println("* Sales: $" + team.get(key));
+				// If team value is same averageSales
+				if(team.get(key) == averageSales)
 					// print out the sentence showing that the two values are the same
 					System.out.println("* Equal to the average.\n");
 				else
-					// print out the sentence showing team[i].getSales is bigger than averageSales
-					System.out.println("* " + (team[i].getmSales() - averageSales)+" above the average.");
+					// print out the sentence showing team value is bigger than averageSales
+					System.out.println("* " + (team.get(key) - averageSales)+" above the average.");
 			}
 		}
 		
 		System.out.println("\nThe rest performed as follows: ");
 		
-		// Until finish the array, compare getmSales with highestSales
-		for (int i=0; i<team.length;i++) {
-			// If team[i].getSales isn't same highestSales (other salesman)
-			if(team[i].getmSales() != highestSales) {
-				// print out the team[i]'s name and sales
-				System.out.println("* Name: " + team[i].getmName());
-				System.out.println("* Sales: $" + team[i].getmSales());
-				// If team[i].getSales is bigger than averageSales
-				if (team[i].getmSales() > averageSales)
-					// print out the sentence showing team[i].getSales is bigger than averageSales
-					System.out.println("* " + (team[i].getmSales() - averageSales)+" above the average.\n");
-				// If team[i].getSales is same averageSales
-				else if(team[i].getmSales() == averageSales)
+		// Until finish the hash map, compare team value with highestSales
+		for (String key : team.keySet()) {
+			// If team value isn't same highestSales (other salesman)
+			if(team.get(key) != highestSales) {
+				// print out the team's key and value
+				System.out.println("* Name: " + key);
+				System.out.println("* Sales: $" + team.get(key));
+				// If team value is bigger than averageSales
+				if (team.get(key) > averageSales)
+					// print out the sentence showing team value is bigger than averageSales
+					System.out.println("* " + (team.get(key) - averageSales)+" above the average.\n");
+				// If team value is same averageSales
+				else if(team.get(key) == averageSales)
 					// print out the sentence showing that the two values are the same
 					System.out.println("* Equal to the average.\n");
-				// If team[i].getSales is smaller than averageSales
+				// If team value is smaller than averageSales
 				else
-					// print out the sentence showing team[i].getSales is smaller than averageSales
-					System.out.println("* " + (averageSales - team[i].getmSales())+" below the average.\n");
+					// print out the sentence showing team value is smaller than averageSales
+					System.out.println("* " + (averageSales - team.get(key))+" below the average.\n");
 			}
 		}
 	}
